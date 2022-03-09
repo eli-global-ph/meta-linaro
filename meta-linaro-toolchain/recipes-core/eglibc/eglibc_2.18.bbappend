@@ -2,7 +2,7 @@ MMYY = "13.10"
 RELEASE = "20${MMYY}"
 PR = "r${RELEASE}"
 
-SRC_URI = "http://releases.linaro.org/${MMYY}/components/toolchain/eglibc-linaro/eglibc-linaro-${PV}-${RELEASE}.tar.bz2 \
+SRC_URI = "http://releases.linaro.org/archive/${MMYY}/components/toolchain/eglibc-linaro/eglibc-linaro-${PV}-${RELEASE}.tar.bz2 \
            file://eglibc-svn-arm-lowlevellock-include-tls.patch \
            file://IO-acquire-lock-fix.patch \
            file://mips-rld-map-check.patch \
