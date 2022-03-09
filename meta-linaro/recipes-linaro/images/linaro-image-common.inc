@@ -2,31 +2,20 @@ inherit core-image
 
 IMAGE_FEATURES += "ssh-server-openssh nfs-server package-management"
 
-HUGETLB:armv7a = "libhugetlbfs-tests"
-HUGETLB:aarch64 = "libhugetlbfs-tests"
-HUGETLB ?= ""
-
-FWTS:armv7a = ""
-FWTS:armv7ab = ""
-FWTS ?= "fwts"
-
 IMAGE_INSTALL += " \
-    bash \
-    e2fsprogs-e2fsck \
-    kexec-tools \
     linaro-lava-tests \
-    procps \
-    stress \
-    stress-dbg \
+    powertop \
     sudo \
-    util-linux-fsck \
-    ${@bb.utils.contains("MACHINE_FEATURES", "optee", "optee-test optee-client", "", d)} \
-   "
+    stress-dbg \
+    stress \
+    nss-myhostname \
+    bash \
+    "
+
+IMAGE_INSTALL_append_aarch64 = "libhugetlbfs"
 
 SDK_IMAGE_INSTALL += "\
     acpica \
-    acpitests \
-    bc \
     bison \
     boost-date-time \
     boost-filesystem \
@@ -44,19 +33,15 @@ SDK_IMAGE_INSTALL += "\
     elfutils-dev \
     expat \
     flex \
-    ${FWTS} \
     gator \
     gd \
-    git \
     glog \
     icu \
-    idlestat \
-    iozone3 \
     libbz2 \
-    uw-imap-dev \
     libcap \
+    libc-client-dev \
     libdwarf-dev \
-    libevent \
+    libevent-fb \
     libmcrypt \
     libmemcached \
     libmysqlclient-r \
@@ -71,52 +56,11 @@ SDK_IMAGE_INSTALL += "\
     openldap \
     openssh-sftp-server \
     openssl \
-    perf \
-    pm-qa \
-    powerdebug \
-    powertop \
     python \
-    python-misc \
-    python-multiprocessing \
-    python-numpy \
-    python-scons \
-    python-shell \
-    python-threading \
     qemu \
     readline \
-    rt-tests \
-    sshfs-fuse \
     tbb \
-    trace-cmd \
-    xserver-xorg-xvfb \
-    xz \
     zlib \
-    ${HUGETLB} \
+    sshfs-fuse \
+    xserver-xorg-xvfb \
     "
-
-ROOTFS_POSTPROCESS_COMMAND += "do_systemd_network ; do_hacknfs ;"
-
-# The boot will fail if you have (k)NFSD disabled or no nfs modules installed
-do_hacknfs () {
-	rm -f ${IMAGE_ROOTFS}/lib/systemd/system/sysinit.target.wants/proc-fs-nfsd.mount
-}
-
-do_systemd_network () {
-        install -d ${IMAGE_ROOTFS}${sysconfdir}/systemd/network
-        cat << EOF > ${IMAGE_ROOTFS}${sysconfdir}/systemd/network/10-en.network
-[Match]
-Name=en*
-
-[Network]
-DHCP=yes
-EOF
-
-        cat << EOF > ${IMAGE_ROOTFS}${sysconfdir}/systemd/network/11-eth.network
-[Match]
-Name=eth*
-
-[Network]
-DHCP=yes
-EOF
-}
-

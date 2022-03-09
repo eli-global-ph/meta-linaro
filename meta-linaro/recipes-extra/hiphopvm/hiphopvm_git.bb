@@ -11,9 +11,9 @@ gd \
 glog \
 icu \
 libcap \
-uw-imap \
+libc-client \
 libdwarf \
-libevent \
+libevent-fb \
 libmcrypt \
 libmemcached \
 libunwind \
@@ -33,18 +33,18 @@ ${EXTRA_DEPENDS} \
 
 # optional (for now) dependencies:
 EXTRA_DEPENDS = "gperftools"
-EXTRA_DEPENDS:aarch64 = ""
+EXTRA_DEPENDS_aarch64 = ""
 
 # 64-bit platforms only
 COMPATIBLE_HOST = '(x86_64.*|aarch64.*)-linux'
 
-LICENSE = "PHP & Zend"
+LICENSE = "PHP Zend"
 
 LIC_FILES_CHKSUM = " \
 		file://LICENSE.PHP;md5=cb564efdf78cce8ea6e4b5a4f7c05d97 \
 		file://LICENSE.ZEND;md5=69e7a9c51846dd6692f1b946f95f6c60"
 
-SRC_URI = "git://github.com/facebook/hhvm.git;protocol=https;branch=master \
+SRC_URI = "git://github.com/facebook/hhvm.git \
            file://hrw-check-for-libdwarf-in-our-place-first.patch \
            "
 
@@ -54,7 +54,7 @@ PV = "2.0.2+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-do_configure:prepend() {
+do_configure_prepend() {
 	export HPHP_HOME="${B}"
 	export HPHP_LIB="${B}"/bin
 	export USE_HHVM=1

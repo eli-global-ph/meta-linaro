@@ -17,12 +17,9 @@ SRC_URI = "\
 SRC_URI[md5sum] = "05926bb18c22af508a3718a90b2e9a2c"
 SRC_URI[sha256sum] = "89eae02e1a117040d60b3b561fe55f88d7f8cf41b94af1492969ef68e6797886"
 
-EXTRA_OECONF += " \
-                 --with-gmetad \
-                 --disable-python \
-                "
+EXTRA_OECONF += "--with-gmetad"
 
-inherit pkgconfig autotools-brokensep python3native update-rc.d
+inherit autotools pythonnative update-rc.d
 
 # The ganglia autoconf setup doesn't include libmetrics in its
 # AC_OUTPUT list -- it reconfigures libmetrics using its own rules.
@@ -30,12 +27,12 @@ inherit pkgconfig autotools-brokensep python3native update-rc.d
 # ltmain.sh (and others) in libmetrics and as such the build will
 # fail.  We explicitly force regeneration of that directory.
 
-do_configure:append() {
-       (cd ${S} ; autoreconf -fvi )
-       (cd ${S}/libmetrics ; autoreconf -fvi)
+do_configure_append() {
+       autoreconf -fvi
+       (cd libmetrics; autoreconf -fvi)
 }
 
-do_install:append() {
+do_install_append() {
     install -d ${D}${sysconfdir}/init.d
     # gmetad expects the following directory and owned by user 'nobody'
     install -o nobody -d ${D}${localstatedir}/lib/${PN}/rrds
@@ -55,16 +52,16 @@ do_install:append() {
 
 PACKAGES =+ "gmetad"
 
-RDEPENDS:${PN} = "gmetad"
+RDEPENDS_${PN} = "gmetad"
 
 BBCLASSEXTEND = "native"
 
-FILES:gmetad = "\
+FILES_gmetad = "\
     ${sbindir}/gmetad \
     ${sysconfdir}/init.d/gmetad \
 "
 
 INITSCRIPT_PACKAGES = "${PN} gmetad"
-INITSCRIPT_NAME:ganglia = "gmond"
-INITSCRIPT_NAME:gmetad = "gmetad"
+INITSCRIPT_NAME_ganglia = "gmond"
+INITSCRIPT_NAME_gmetad = "gmetad"
 INITSCRIPT_PARAMS = "defaults 66"

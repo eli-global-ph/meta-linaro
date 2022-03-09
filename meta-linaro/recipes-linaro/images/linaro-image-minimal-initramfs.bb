@@ -22,7 +22,6 @@ IMAGE_INSTALL = "\
   dosfstools \
   e2fsprogs \
   e2fsprogs-mke2fs \
-  gptfdisk \
   gzip \
   initramfs-boot-linaro \
   net-tools \
@@ -37,4 +36,4 @@ IMAGE_LINGUAS = ""
 
 IMAGE_ROOTFS_SIZE = "8192"
 
-inherit core-image
+inherit core-image image_types_uboot

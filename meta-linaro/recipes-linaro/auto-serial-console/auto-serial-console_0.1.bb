@@ -3,7 +3,7 @@ DESCRIPTION = "Scripts to auto login with root and call the console tty from the
 SECTION = "base"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "\
-	file://${COREBASE}/LICENSE;md5=4d92cd373abda3937c2bc47fbc49d690 \
+	file://${COREBASE}/LICENSE;md5=3f40d7994397109285ec7b81fdeb3b58 \
 	file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420 \
 "
 
@@ -20,9 +20,9 @@ SRC_URI = "\
 "
 
 PACKAGES =+ "auto-console-login"
-RDEPENDS:${PN} = "auto-console-login"
+RDEPENDS_${PN} = "auto-console-login"
 
-FILES:auto-console-login = "\
+FILES_auto-console-login = "\
 	${bindir}/auto-root-login \
 	${sysconfdir}/init.d/auto-console-login \
 "
@@ -30,8 +30,8 @@ FILES:auto-console-login = "\
 S = "${WORKDIR}"
 
 INITSCRIPT_PACKAGES = "${PN} auto-console-login"
-INITSCRIPT_NAME:auto-serial-console = "auto-serial-console"
-INITSCRIPT_NAME:auto-console-login = "auto-console-login"
+INITSCRIPT_NAME_auto-serial-console = "auto-serial-console"
+INITSCRIPT_NAME_auto-console-login = "auto-console-login"
 INITSCRIPT_PARAMS = "start 99 5 ."
 
 do_install () {

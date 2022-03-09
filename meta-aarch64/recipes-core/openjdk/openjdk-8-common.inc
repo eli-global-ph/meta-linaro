@@ -47,34 +47,16 @@ PRIVATE_LIBS = "\
 	libwaiters.so libhprof.so \
        "
 
-COMPATIBLE_HOST = "(aarch64).*-linux"
 JAVA_HOME[unexport] = "1"
 S="${WORKDIR}/openjdk8-aarch64-port-snapshot"
 
-# The compiler tests in do_configure seem to drop TARGET_CC_ARCH from $CC, so add it into CFLAGS.
-CFLAGS =+ "${TARGET_CC_ARCH} ${TOOLCHAIN_OPTIONS}"
-CXXFLAGS =+ "${TARGET_CC_ARCH} ${TOOLCHAIN_OPTIONS}"
-export EXTRA_CFLAGS = "${TOOLCHAIN_OPTIONS}"
-ASNEEDED = ""
-
 do_configure() {
 	unset MAKE
-	bash ./configure --with-debug-level=release --with-jvm-variants=client,server --with-sys-root=${STAGING_DIR_TARGET} --openjdk-target=${TARGET_SYS} --with-zlib=system --with-stdc++lib=dynamic --disable-ccache --disable-zip-debug-info
+	bash ./configure --with-debug-level=release --with-jvm-variants=client,server --with-sys-root=${STAGING_DIR_TARGET} --openjdk-target=aarch64-oe-linux --with-zlib=system --with-stdc++lib=dynamic --disable-ccache --disable-zip-debug-info
 }
 
 do_compile() {
-	make \
-		LOG=debug \
-		ALT_SDT_H=/openjdk/path/to/a/nonexistent/directory \
-		EXTRA_CFLAGS='${EXTRA_CFLAGS}' \
-		CC='${CC}' \
-		CXX='${CXX}' \
-		LD='${CC} ${LDFLAGS}' \
-		LDCXX='${CXX} ${LDFLAGS}' \
-		LDEXE='${CC} ${LDFLAGS}' \
-		LDEXECXX='${CXX} ${LDFLAGS}' \
-		images
-
+	make LOG=debug images
 }
 
 do_install() {
@@ -91,10 +73,9 @@ do_install() {
 # The upstream Mercurial repo has various incompatible binaries checked in.
 # Remove these otherwise bitbake complains about mismatched architecture, et al.
 	find ${D}${JDK_HOME}/jtreg -name \*.so -print | xargs rm
+	rm ${D}${JDK_HOME}/jtreg/jdk/test/sun/management/jmxremote/bootstrap/solaris-sparc/launcher
+	rm ${D}${JDK_HOME}/jtreg/jdk/test/sun/management/jmxremote/bootstrap/solaris-i586/launcher
 	rm ${D}${JDK_HOME}/jtreg/jdk/test/sun/management/jmxremote/bootstrap/linux-i586/launcher
-	rm ${D}${JDK_HOME}/jtreg/jdk/test/sun/management/jmxremote/bootstrap/linux-amd64/launcher
-	rm ${D}${JDK_HOME}/jtreg/jdk/test/sun/management/jmxremote/bootstrap/solaris-sparcv9/launcher
-	rm ${D}${JDK_HOME}/jtreg/jdk/test/sun/management/jmxremote/bootstrap/solaris-amd64/launcher
 	chmod -R u+rw,go+r ${D}${JDK_HOME}
 }
 
@@ -107,7 +88,7 @@ PACKAGES = " \
 	    ${JDKPN}-jre \
 	   "
 
-FILES:${JDKPN}-jdk = " \
+FILES_${JDKPN}-jdk = " \
 		       ${JDK_HOME}/bin \
 		       ${JDK_HOME}/lib \
 		       ${JDK_HOME}/include \
@@ -117,40 +98,40 @@ FILES:${JDKPN}-jdk = " \
 		       ${JDK_HOME}/LICENSE \
 		      "
 
-FILES:${JDKPN}-doc = " \
+FILES_${JDKPN}-doc = " \
 		       ${JDK_HOME}/man \
 		      "
 
-FILES:${JDKPN}-source = " \
+FILES_${JDKPN}-source = " \
 		          ${JDK_HOME}/src.zip \
 			"
 
-FILES:${JDKPN}-demo = " \
+FILES_${JDKPN}-demo = " \
 		        ${JDK_HOME}/demo \
                         ${JDK_HOME}/sample \
                       "
 
-FILES:${JDKPN}-jtreg = " \
+FILES_${JDKPN}-jtreg = " \
                          ${JDK_HOME}/jtreg \
                       "
 
-FILES:${PN} = " \
+FILES_${PN} = " \
 	        ${JDK_HOME}/jre \
               "
 
-INSANE_SKIP:${JDKPN}-jdk = "dev-so"
-INSANE_SKIP:${JDKPN}-jre = "dev-so"
+INSANE_SKIP_${JDKPN}-jdk = "dev-so"
+INSANE_SKIP_${JDKPN}-jre = "dev-so"
 
-RPROVIDES:${JDKPN}-jre = "java2-runtime java2-vm"
-RPROVIDES:${JDKPN}-jdk = "java2-runtime java2-vm"
-RDEPENDS:${JDKPN}-demo = "java2-runtime"
+RPROVIDES_${JDKPN}-jre = "java2-runtime java2-vm"
+RPROVIDES_${JDKPN}-jdk = "java2-runtime java2-vm"
+RDEPENDS_${JDKPN}-demo = "java2-runtime"
 
-RRECOMMENDS:${JDKPN}-jre = "liberation-fonts"
-RRECOMMENDS:${JDKPN}-jdk = "liberation-fonts"
+RRECOMMENDS_${JDKPN}-jre = "liberation-fonts"
+RRECOMMENDS_${JDKPN}-jdk = "liberation-fonts"
 
 inherit update-alternatives
 
-pkg_postinst:${JDKPN}-jre () {
+pkg_postinst_${JDKPN}-jre () {
     update-alternatives --install ${bindir}/java java ${JDK_HOME}/jre/bin/java 75
     update-alternatives --install ${bindir}/jjs jjs ${JDK_HOME}/jre/bin/jjs 75
     update-alternatives --install ${bindir}/keytool keytool ${JDK_HOME}/jre/bin/keytool 75
@@ -164,7 +145,7 @@ pkg_postinst:${JDKPN}-jre () {
     update-alternatives --install ${bindir}/unpack200 unpack200 ${JDK_HOME}/jre/bin/unpack200 75
 }
 
-pkg_prerm:${JDKPN}-jre () {
+pkg_prerm_${JDKPN}-jre () {
     update-alternatives --remove java ${JDK_HOME}/jre/bin/java
     update-alternatives --remove jjs ${JDK_HOME}/jre/bin/jjs
     update-alternatives --remove keytool ${JDK_HOME}/jre/bin/keytool
@@ -178,7 +159,7 @@ pkg_prerm:${JDKPN}-jre () {
     update-alternatives --remove unpack200 ${JDK_HOME}/jre/bin/unpack200
 }
 
-pkg_postinst:${JDKPN}-jdk () {
+pkg_postinst_${JDKPN}-jdk () {
     update-alternatives --install ${bindir}/appletviewer appletviewer ${JDK_HOME}/bin/appletviewer 100
     update-alternatives --install ${bindir}/extcheck extcheck ${JDK_HOME}/bin/extcheck 100
     update-alternatives --install ${bindir}/idlj idlj ${JDK_HOME}/bin/idlj 100
@@ -222,7 +203,7 @@ pkg_postinst:${JDKPN}-jdk () {
     update-alternatives --install ${bindir}/xjc xjc ${JDK_HOME}/bin/xjc 100
 }
 
-pkg_prerm:${JDKPN}-jdk () {
+pkg_prerm_${JDKPN}-jdk () {
     update-alternatives --remove appletviewer ${JDK_HOME}/bin/appletviewer
     update-alternatives --remove extcheck ${JDK_HOME}/bin/extcheck
     update-alternatives --remove idlj ${JDK_HOME}/bin/idlj

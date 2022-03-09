@@ -3,7 +3,7 @@ LICENSE = "CLOSED"
 
 SRC_URI = "file://files-to-inject.tar.xz"
 
-S = "${WORKDIR}/files-to-inject"
+S = "${WORKDIR}/files-to-inject/"
 
 # all files will be put in /opt/ directory with keeping tarball structure
 
@@ -12,7 +12,7 @@ do_install() {
 	cp -a ${S} ${D}/opt/
 }
 
-FILES:${PN} = "/opt"
+FILES_${PN} = "/opt"
 
 # How to use it?
 #
