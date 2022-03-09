@@ -44,17 +44,26 @@ LIC_FILES_CHKSUM = " \
 		file://LICENSE.PHP;md5=cb564efdf78cce8ea6e4b5a4f7c05d97 \
 		file://LICENSE.ZEND;md5=69e7a9c51846dd6692f1b946f95f6c60"
 
+<<<<<<< Updated upstream
 SRC_URI = "git://github.com/facebook/hhvm.git;protocol=https;branch=master \
+=======
+SRC_URI = "git://github.com/facebook/hiphop-php.git \
+>>>>>>> Stashed changes
            file://hrw-check-for-libdwarf-in-our-place-first.patch \
            "
 
-SRCREV = "4c4d11304aef8857dcce8524e7fd9223e00191b5"
-
-PV = "2.0.2+git${SRCPV}"
+SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
+<<<<<<< Updated upstream
 do_configure:prepend() {
+=======
+PV = "0.0+git${SRCPV}"
+PR = "r1"
+
+do_configure_prepend() {
+>>>>>>> Stashed changes
 	export HPHP_HOME="${B}"
 	export HPHP_LIB="${B}"/bin
 	export USE_HHVM=1

@@ -15,6 +15,7 @@ IMAGE_INSTALL += " \
     e2fsprogs-e2fsck \
     kexec-tools \
     linaro-lava-tests \
+<<<<<<< Updated upstream
     procps \
     stress \
     stress-dbg \
@@ -27,6 +28,19 @@ SDK_IMAGE_INSTALL += "\
     acpica \
     acpitests \
     bc \
+=======
+    powertop \
+    sudo \
+    stress-dbg \
+    nss-myhostname \
+    bash \
+    "
+
+IMAGE_INSTALL_append_aarch64 += "perf"
+
+SDK_IMAGE_INSTALL += "\
+    ltp \
+>>>>>>> Stashed changes
     bison \
     boost-date-time \
     boost-filesystem \
@@ -39,13 +53,14 @@ SDK_IMAGE_INSTALL += "\
     boost-thread \
     cmake \
     curl \
-    dmidecode \
-    efibootmgr \
     elfutils-dev \
     expat \
     flex \
+<<<<<<< Updated upstream
     ${FWTS} \
     gator \
+=======
+>>>>>>> Stashed changes
     gd \
     git \
     glog \
@@ -64,13 +79,11 @@ SDK_IMAGE_INSTALL += "\
     libpcre \
     libunwind \
     libxml2 \
-    lshw \
-    ltp \
     ncurses \
     onig \
     openldap \
-    openssh-sftp-server \
     openssl \
+<<<<<<< Updated upstream
     perf \
     pm-qa \
     powerdebug \
@@ -83,15 +96,28 @@ SDK_IMAGE_INSTALL += "\
     python-shell \
     python-threading \
     qemu \
+=======
+>>>>>>> Stashed changes
     readline \
     rt-tests \
     sshfs-fuse \
+<<<<<<< Updated upstream
     tbb \
     trace-cmd \
     xserver-xorg-xvfb \
     xz \
     zlib \
     ${HUGETLB} \
+=======
+    "
+
+LAMP_IMAGE_INSTALL += "\
+    apache2 \
+    mysql5-server \
+    mysql5-client \
+    php-fpm \
+    php-fpm-apache2 \
+>>>>>>> Stashed changes
     "
 
 ROOTFS_POSTPROCESS_COMMAND += "do_systemd_network ; do_hacknfs ;"
