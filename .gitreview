@@ -2,8 +2,4 @@
 host=staging.review.linaro.org
 port=29418
 project=openembedded/meta-linaro
-<<<<<<< Updated upstream
-defaultbranch=master
-=======
 defaultbranch=dylan
->>>>>>> Stashed changes

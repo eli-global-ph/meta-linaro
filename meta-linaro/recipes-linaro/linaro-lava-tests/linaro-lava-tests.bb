@@ -19,4 +19,4 @@ do_install() {
     install -m 0644 *.php ${D}/usr/share/apache2/htdocs/
 }
 
-FILES:${PN} = "/"
+FILES_${PN} = "/"

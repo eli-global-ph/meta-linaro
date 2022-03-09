@@ -3,7 +3,7 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
-RDEPENDS:${PN} = "\
+RDEPENDS_${PN} = "\
     packagegroup-core-standalone-sdk-target \
     binutils-dev \
     binutils-staticdev \
@@ -24,12 +24,12 @@ RDEPENDS:${PN} = "\
     icu-dev \
     libcap-dev \
     libcap-staticdev \
-    uw-imap-dev \
-    uw-imap-staticdev \
+    libc-client-dev \
+    libc-client-staticdev \
     libdwarf-dev \
     libdwarf-staticdev \
-    libevent-dev \
-    libevent-staticdev \
+    libevent-fb-dev \
+    libevent-fb-staticdev \
     libglade-dev \
     libmcrypt-dev \
     libmemcached-dev \
